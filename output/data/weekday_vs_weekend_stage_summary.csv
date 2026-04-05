@@ -1,0 +1,9 @@
+cohort,stage,available_records,median_hours,mean_hours,p90_hours
+Weekday,order_to_collect,152932,0.167,0.616,1.45
+Weekday,collect_to_receipt,186464,0.433,3.359,6.867
+Weekday,receipt_to_verified,179146,0.583,7.662,5.983
+Weekday,order_to_verified,180758,1.75,9.353,9.517
+Weekend,order_to_collect,29077,0.383,0.875,1.867
+Weekend,collect_to_receipt,37923,0.267,1.858,3.833
+Weekend,receipt_to_verified,36264,0.483,2.497,1.417
+Weekend,order_to_verified,36700,1.1,4.303,6.317

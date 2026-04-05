@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+tmp/
+.venv/
+.env
+
+Final Project- Case/2025_specimen_time_series_events_no_phi.tsv
+Final Project- Case/2025_specimen_time_series_events_no_phi.zip

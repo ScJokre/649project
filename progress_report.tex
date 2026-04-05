@@ -1,0 +1,52 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.55in]{geometry}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{0pt}
+\setlist[itemize]{leftmargin=1.2em, itemsep=0.15em, topsep=0.2em}
+\titlespacing*{\section}{0pt}{0.3em}{0.2em}
+\pagestyle{empty}
+
+\begin{document}
+
+{\Large \textbf{Narrative Visualization Project Progress Report}}\\[-0.2em]
+\textbf{Project:} Specimen Journey Comparison Dashboard for Hospital Lab Operations
+
+\textbf{Problem context.} This project focuses on the laboratory workflow that begins when a physician orders a test and continues through specimen collection, transport, laboratory receipt, result reporting, and final verification. The target users are hospital laboratory operations managers and quality improvement staff, who need to understand where this process slows down, where bottlenecks appear, and which cohorts of orders are more likely to be cancelled. Rather than inspecting isolated timestamps, these users need a clear visual summary of the average specimen journey and a way to compare two operationally meaningful groups.
+
+\textbf{Main question.} The primary question is: \emph{How does the specimen journey differ across cohorts, and where are the main delays and cancellation risks?} I chose this question because it directly matches the client request for an inspectable average timeline, an A/B comparison between mutually exclusive groups, and a probability view for a named event. For the first version of the project, I am comparing weekday and weekend orders because this split is easy to derive, easy to interpret, and operationally plausible. I am using \texttt{cancellation\_dt} as the first event-likelihood measure because it clearly exists in the dataset and provides a concrete risk indicator.
+
+\textbf{Progress so far.} I reviewed the assignment materials, the client message, and the dataset explainer, then inspected the event extract itself. The dataset contains over two million event rows and includes both order-level events and tube-tracker events. I wrote code to aggregate the raw event stream into one row per ordered test, derive stage-level durations, flag cancellations, and create an initial weekday-versus-weekend comparison. The first analysis table contains 230{,}245 ordered tests in the 2025 study window. This gives me a usable foundation for both sketching and later implementation.
+
+\textbf{Task abstraction.} Using Munzner's task typology, the dashboard currently supports four core tasks. First, users need to \textbf{compare and summarize} weekday and weekend specimen journeys. Second, they need to \textbf{identify outliers and derive patterns} by finding which stage contributes the most delay, such as order-to-collection, collection-to-receipt, or receipt-to-verification. Third, they need to \textbf{compare and summarize} cancellation likelihood across cohorts. Fourth, they need to \textbf{browse and look up} specific workflow slices, such as a particular test code, location, or performing department.
+
+\textbf{Current design direction.} The dashboard centers on an average journey timeline because sequence is the most important part of the specimen workflow. Supporting views show stage-by-stage duration differences, cancellation likelihood, and compact KPI summaries. The current sketch set explores both the overall dashboard structure and alternative ways to represent the main time-series comparison while keeping room for filters and details-on-demand. These sketches are intentionally low-fidelity digital wireframes rather than polished mockups, because the goal at this stage is to test layout, encodings, and comparison logic before committing to final implementation details.
+
+\begin{figure}[b]
+\centering
+\begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{output/sketches/sketch_1_dashboard_overview.png}
+    \caption{Low-fidelity dashboard layout sketch}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{output/sketches/sketch_2_average_journey_timeline.png}
+    \caption{Low-fidelity timeline sketch}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.32\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{output/sketches/sketch_3_ab_comparison_and_risk.png}
+    \caption{Low-fidelity A/B and risk sketch}
+\end{subfigure}
+\caption*{\small Figure: Early-stage digital wireframe sketches used to explore layout, encodings, and comparison views before building the final dashboard.}
+\end{figure}
+
+\end{document}
