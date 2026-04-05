@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import textwrap
 from pathlib import Path
 
 import matplotlib
@@ -58,11 +59,12 @@ def box(ax, x, y, w, h, title, body=None, color=INK, lw=2):
 
 
 def note(ax, x, y, text):
+    wrapped = textwrap.fill(text, width=48)
     ax.text(
         x,
         y,
-        text,
-        fontsize=8.6,
+        wrapped,
+        fontsize=8.0,
         color=NOTE,
         va="top",
         bbox={"boxstyle": "round,pad=0.25", "facecolor": "#FFF8E6", "edgecolor": "#D8C9A6"},
@@ -97,58 +99,65 @@ def sketch_1_dashboard(output_path: Path):
         color=NOTE,
     )
 
-    box(ax, 3, 15, 20, 68, "Filters", "cohort, test code, street, dept, date range")
-    box(ax, 25, 48, 47, 35, "Average Journey Timeline", "ordered -> collected -> receipt -> verified")
-    box(ax, 74, 48, 23, 35, "A/B KPI Summary", "median TAT, delta, cancel rate, n")
-    box(ax, 25, 15, 47, 29, "Stage Duration Comparison", "order->collect, collect->receipt, receipt->verified")
-    box(ax, 74, 15, 23, 29, "Cancellation Likelihood", "weekday % vs weekend %")
-    box(ax, 3, 5, 94, 7, "Details on Demand", "selected cohort notes, subset description, caveats")
+    box(ax, 3, 15, 20, 68, "Filters")
+    box(ax, 25, 48, 47, 35, "Average Journey Timeline")
+    box(ax, 74, 48, 23, 35, "A/B KPI Summary")
+    box(ax, 25, 15, 47, 29, "Stage Duration Comparison")
+    box(ax, 74, 15, 23, 29, "Cancellation Likelihood")
+    box(ax, 3, 5, 94, 7, "Details on Demand")
 
-    for y, label in zip([74, 68, 62, 56, 50], ["weekday/weekend", "test code", "event street", "performing dept", "date range"]):
-        ax.text(6, y, f"- {label}", fontsize=9)
+    ax.text(6, 73.5, "cohort", fontsize=8.5, color=NOTE)
+    ax.text(6, 70.5, "- weekday / weekend", fontsize=9)
+    for y, label in zip([64, 57, 50, 43], ["test code", "event street", "performing dept", "date range"]):
+        ax.text(7.2, y, f"- {label}", fontsize=9)
+
+    ax.text(27.5, 73.5, "median elapsed hours since order", fontsize=8.4, color=NOTE)
+    ax.text(27.5, 69.8, "ordered -> collected -> receipt -> verified", fontsize=8.8, color=NOTE)
 
     timeline_y = [71, 60]
     labels = ["Weekday", "Weekend"]
-    xs = [[31, 39, 49, 63], [31, 43, 50, 66]]
+    xs = [[33, 40, 50, 63], [33, 44, 51, 66]]
     colors = [WEEKDAY_COLOR, WEEKEND_COLOR]
     for y, lab, row_xs, color in zip(timeline_y, labels, xs, colors):
         ax.text(27.5, y, lab, fontsize=9.5, fontweight="bold", color=color, va="center")
         ax.plot(row_xs, [y] * len(row_xs), color=color, linewidth=2.2)
         ax.scatter(row_xs, [y] * len(row_xs), s=28, color=color, zorder=3)
     for x, lab in zip(xs[0], ["ordered", "collected", "receipt", "verified"]):
-        ax.text(x - 2, 53, lab, fontsize=7.8, rotation=10)
+        ax.text(x - 1.5, 53.5, lab, fontsize=7.6, rotation=10)
 
-    ax.text(77, 73, "Weekday", fontsize=9.5, fontweight="bold", color=WEEKDAY_COLOR)
-    ax.text(77, 68, "Weekend", fontsize=9.5, fontweight="bold", color=WEEKEND_COLOR)
-    ax.text(77, 62, "Median TAT", fontsize=9)
-    ax.text(90, 62, "1.75h / 1.10h", fontsize=9, ha="right")
-    ax.text(77, 57, "Cancel rate", fontsize=9)
-    ax.text(90, 57, "4.28% / 4.52%", fontsize=9, ha="right")
-    ax.text(77, 52, "Delta", fontsize=9)
-    ax.text(90, 52, "weekend -0.65h", fontsize=9, ha="right")
+    ax.text(77, 73, "A: Weekday", fontsize=9.2, fontweight="bold", color=WEEKDAY_COLOR)
+    ax.text(77, 68, "B: Weekend", fontsize=9.2, fontweight="bold", color=WEEKEND_COLOR)
+    ax.text(77, 61.5, "Median TAT", fontsize=8.8)
+    ax.text(95, 61.5, "1.75h / 1.10h", fontsize=8.8, ha="right")
+    ax.text(77, 56.5, "Cancel rate", fontsize=8.8)
+    ax.text(95, 56.5, "4.28% / 4.52%", fontsize=8.8, ha="right")
+    ax.text(77, 51.5, "Delta", fontsize=8.8)
+    ax.text(95, 51.5, "weekend -0.65h", fontsize=8.8, ha="right")
 
     stage_names = ["Order->Collect", "Collect->Receipt", "Receipt->Verified"]
-    centers = [37, 31, 25]
-    weekday_vals = [10, 21, 28]
-    weekend_vals = [18, 13, 22]
+    centers = [36, 29.5, 23]
+    weekday_vals = [8.5, 18, 24]
+    weekend_vals = [15, 10.5, 19]
     for y, stage, wv, ev in zip(centers, stage_names, weekday_vals, weekend_vals):
-        ax.text(27.5, y + 1.6, stage, fontsize=8.6)
-        ax.add_patch(Rectangle((48, y), wv, 1.8, color=WEEKDAY_COLOR, alpha=0.9))
-        ax.add_patch(Rectangle((48, y - 2.7), ev, 1.8, color=WEEKEND_COLOR, alpha=0.9))
+        ax.text(27.5, y + 1.3, stage, fontsize=8.4)
+        ax.add_patch(Rectangle((45.5, y), wv, 1.7, color=WEEKDAY_COLOR, alpha=0.9))
+        ax.add_patch(Rectangle((45.5, y - 2.6), ev, 1.7, color=WEEKEND_COLOR, alpha=0.9))
 
-    ax.add_patch(Rectangle((79, 24), 8.5, 10.5, color=WEEKDAY_COLOR, alpha=0.92))
-    ax.add_patch(Rectangle((89, 24), 8.5, 11.1, color=WEEKEND_COLOR, alpha=0.92))
-    ax.text(83.2, 21.5, "Weekday", fontsize=8.3, ha="center")
-    ax.text(93.2, 21.5, "Weekend", fontsize=8.3, ha="center")
+    ax.text(77, 35, "weekday % vs weekend %", fontsize=8.4, color=NOTE)
+    ax.add_patch(Rectangle((79, 23.5), 7.4, 10.5, color=WEEKDAY_COLOR, alpha=0.92))
+    ax.add_patch(Rectangle((88.5, 23.5), 7.4, 11.1, color=WEEKEND_COLOR, alpha=0.92))
+    ax.text(82.7, 21.2, "Weekday", fontsize=7.8, ha="center")
+    ax.text(92.2, 21.2, "Weekend", fontsize=7.8, ha="center")
 
     arrow_label(ax, 12, 86, 19.5, 76, "interactive filters")
     arrow_label(ax, 57, 88, 51, 73.5, "main answer lives here")
     arrow_label(ax, 94, 85, 90, 65, "fast summary")
     arrow_label(ax, 60, 8.5, 50, 10.5, "details on demand")
 
-    note(ax, 5, 97, "Main timeline is centered because the client asked for an inspectable average timeline.")
-    note(ax, 65, 97, "Cancellation is kept separate from timing so risk is not confused with duration.")
-    note(ax, 6, 13, "Use color for cohort. Use x-position and bar length for time.")
+    note(ax, 5, 10.5, "Use color for cohort. Use x-position and bar length for time.")
+    note(ax, 34, 10.5, "Main timeline is centered because the client asked for an inspectable average timeline.")
+    note(ax, 71, 10.5, "Cancellation is kept separate from timing so risk is not confused with duration.")
+    ax.text(5, 2.8, "selected cohort notes, subset description, caveats", fontsize=8.3, color=NOTE)
 
     save(fig, output_path)
 
@@ -198,10 +207,10 @@ def sketch_2_timeline(output_path: Path):
     arrow_label(ax, 77, 31, 56, 38, "shorter total time here")
     arrow_label(ax, 64, 87, 62, 78, "shared time axis")
 
-    note(ax, 5, 25, "A milestone timeline preserves sequence better than stacked bars.")
-    note(ax, 42, 25, "Distance between points shows where the delay occurs.")
-    note(ax, 73, 25, "This directly answers the client's request for a graphic timeline.")
-    note(ax, 5, 16, "Alternative considered: stacked stage bars. Not chosen as the main view because the event sequence is less explicit.")
+    note(ax, 5, 20, "A milestone timeline preserves sequence better than stacked bars.")
+    note(ax, 5, 11.5, "Alternative considered: stacked stage bars. Not chosen as the main view because the event sequence is less explicit.")
+    note(ax, 55, 20, "Distance between points shows where the delay occurs.")
+    note(ax, 55, 11.5, "This directly answers the client's request for a graphic timeline.")
 
     save(fig, output_path)
 
@@ -217,7 +226,8 @@ def sketch_3_ab(output_path: Path):
         color=NOTE,
     )
 
-    box(ax, 4, 43, 92, 40, "Stage Duration Comparison", "Grouped bars for three process stages")
+    box(ax, 4, 43, 92, 40, "Stage Duration Comparison")
+    ax.text(6, 74.5, "Grouped bars for three process stages", fontsize=8.8, color=NOTE)
     stages = ["Order -> Collect", "Collect -> Receipt", "Receipt -> Verified"]
     y_rows = [72, 61, 50]
     weekday_vals = [14, 24, 30]
@@ -230,7 +240,8 @@ def sketch_3_ab(output_path: Path):
         ax.text(36.5, y + 2.2, "Wkdy", fontsize=7.8, ha="right", color=WEEKDAY_COLOR)
         ax.text(36.5, y - 1.4, "Wknd", fontsize=7.8, ha="right", color=WEEKEND_COLOR)
 
-    box(ax, 4, 12, 92, 24, "Cancellation Likelihood", "Separate chart so time and risk are not mixed")
+    box(ax, 4, 12, 92, 24, "Cancellation Likelihood")
+    ax.text(6, 28.3, "Separate chart so time and risk are not mixed", fontsize=8.8, color=NOTE)
     ax.add_patch(Rectangle((20, 16), 18, 11.3, color=WEEKDAY_COLOR, alpha=0.92))
     ax.add_patch(Rectangle((48, 16), 18, 12.0, color=WEEKEND_COLOR, alpha=0.92))
     ax.text(29, 29.5, "4.28%", fontsize=12, color=INK, ha="center", fontweight="bold")
@@ -238,10 +249,10 @@ def sketch_3_ab(output_path: Path):
     ax.text(29, 13, "Weekday", fontsize=9, ha="center")
     ax.text(57, 13, "Weekend", fontsize=9, ha="center")
 
-    ax.text(74, 25, "delta:", fontsize=10, fontweight="bold")
-    ax.text(81, 25, "weekend +0.24 pp", fontsize=10)
-    ax.text(74, 20, "takeaway:", fontsize=10, fontweight="bold")
-    ax.text(81, 20, "higher cancel risk, shorter total TAT", fontsize=10)
+    ax.text(72, 25.5, "delta:", fontsize=10, fontweight="bold")
+    ax.text(79, 25.5, "weekend +0.24 pp", fontsize=10)
+    ax.text(72, 20.5, "takeaway:", fontsize=10, fontweight="bold")
+    ax.text(79, 20.5, "higher cancel risk, shorter total TAT", fontsize=10)
 
     arrow_label(ax, 88, 78, 68, 73, "grouped comparison")
     arrow_label(ax, 88, 33, 60, 24, "event probability")
@@ -249,7 +260,7 @@ def sketch_3_ab(output_path: Path):
 
     note(ax, 5, 10, "Grouped bars make it easy to see which stage differs most.")
     note(ax, 42, 10, "Text deltas help non-technical stakeholders read the takeaway quickly.")
-    note(ax, 78, 10, "Use row = stage, bar length = median duration, color = cohort.")
+    note(ax, 71, 10, "Use row = stage, bar length = median duration, color = cohort.")
 
     save(fig, output_path)
 
