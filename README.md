@@ -95,9 +95,13 @@ An initial Streamlit dashboard now exists in `app.py`.
 Current MVP features:
 - filter by test code, event street, and performing department
 - choose an A/B comparison dimension and two mutually exclusive cohorts
+- choose a risk-event definition
 - view an average journey timeline
 - compare stage-level median durations
 - compare cancellation likelihood
+- read an auto-generated narrative summary
+- inspect hotspot categories with the largest TAT or cancellation deltas
+- download filtered details and hotspot tables
 - inspect a details-on-demand table
 
 ## How To Reproduce The Current Outputs
@@ -172,9 +176,12 @@ It uses:
 It currently provides:
 - base filtering
 - A/B cohort selection
+- switchable event-likelihood definitions
 - average journey timeline view
 - stage duration comparison
 - cancellation-likelihood comparison
+- hotspot analysis for subgroup gaps
+- auto-generated story summary
 - details-on-demand table
 
 ### `progress_report.tex`
